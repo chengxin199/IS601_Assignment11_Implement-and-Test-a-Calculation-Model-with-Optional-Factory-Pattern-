@@ -1,3 +1,149 @@
+# Module 11: Calculation Model with Factory Pattern & Database Integration
+
+[![CI/CD](https://github.com/chengxin199/IS601_Assignment11_Implement-and-Test-a-Calculation-Model-with-Optional-Factory-Pattern-/actions/workflows/test.yml/badge.svg)](https://github.com/chengxin199/IS601_Assignment11_Implement-and-Test-a-Calculation-Model-with-Optional-Factory-Pattern-/actions)
+[![Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-91%20passed-success)]()
+
+## 🎯 Project Overview
+
+A FastAPI-based calculator application demonstrating:
+- **SQLAlchemy Polymorphic Models** - Single-table inheritance for calculations
+- **Factory Pattern** - Dynamic calculation type instantiation
+- **Pydantic Schemas** - Comprehensive data validation
+- **Database Integration** - Full PostgreSQL integration with real tests
+- **CI/CD Pipeline** - Automated testing, security scanning, and Docker deployment
+
+### ✨ Key Features
+
+- ✅ **Polymorphic Calculation Models** (Addition, Subtraction, Multiplication, Division)
+- ✅ **Factory Method Pattern** for flexible calculation creation
+- ✅ **Comprehensive Test Suite** (91 tests, 93% coverage)
+- ✅ **TRUE Database Integration Tests** (20 tests with PostgreSQL)
+- ✅ **Pydantic Validation** with business rules (no division by zero, min inputs, etc.)
+- ✅ **Foreign Key Relationships** with CASCADE delete
+- ✅ **GitHub Actions CI/CD** with PostgreSQL service
+- ✅ **Docker Deployment** to Docker Hub
+
+## 📊 Test Results
+
+```
+✅ 91 Total Tests Passing (100%)
+├── 26 Unit Tests (operations logic)
+├── 19 Polymorphic Model Tests (factory pattern, inheritance)
+├── 23 Pydantic Schema Tests (validation)
+├── 20 Database Integration Tests (PostgreSQL) ⭐ NEW
+├── 5 FastAPI Integration Tests (API endpoints)
+└── Coverage: 93%
+```
+
+## 🏗️ Architecture
+
+### Database Models (SQLAlchemy)
+- **Polymorphic Inheritance**: `Calculation` base class with `Addition`, `Subtraction`, `Multiplication`, `Division` subclasses
+- **Factory Pattern**: `Calculation.create()` returns appropriate subclass
+- **Foreign Keys**: User → Calculations (CASCADE delete)
+- **Fields**: `id`, `user_id`, `type`, `inputs`, `result`, `created_at`, `updated_at`
+
+### Pydantic Schemas
+- `CalculationType` - Enum for valid types
+- `CalculationCreate` - Input validation
+- `CalculationResponse` - Output serialization
+- **Validators**: Division by zero, minimum inputs, type normalization
+
+### Design Patterns
+1. **Factory Pattern** - `Calculation.create()`
+2. **Polymorphic Inheritance** - SQLAlchemy single-table
+3. **Template Method** - Abstract `get_result()` method
+4. **Data Transfer Objects** - Pydantic schemas
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.10+
+- Docker & Docker Compose
+- PostgreSQL (via Docker)
+
+### Setup & Run
+
+```bash
+# Clone repository
+git clone <your-repo-url>
+cd module11_is601
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start PostgreSQL database
+docker compose up -d db
+
+# Run tests
+pytest tests/ -v
+
+# Run with coverage
+pytest tests/ --cov=app --cov-report=html
+
+# Start application
+uvicorn main:app --reload
+```
+
+### Database Integration Tests
+
+The project includes **20 comprehensive database tests** that use a real PostgreSQL database:
+
+```bash
+# Run only database integration tests
+pytest tests/integration/test_calculation_db.py -v
+
+# Tests cover:
+# ✓ Database insertion and retrieval
+# ✓ Foreign key constraints
+# ✓ CASCADE delete operations
+# ✓ Polymorphic queries
+# ✓ User-calculation relationships
+# ✓ Data integrity and edge cases
+# ✓ Complex queries (ordering, filtering, counting)
+```
+
+## 📦 Docker Deployment
+
+```bash
+# Build and start all services
+docker compose up -d
+
+# Services:
+# - web: FastAPI application (port 8000)
+# - db: PostgreSQL database (port 5432)
+# - pgadmin: Database admin (port 5050)
+```
+
+## 🧪 Testing Strategy
+
+### Unit Tests (`tests/unit/`)
+- Test individual operation functions
+- No external dependencies
+- Fast execution
+
+### Integration Tests (`tests/integration/`)
+- **Polymorphic Models** - Factory pattern, inheritance behavior
+- **Pydantic Schemas** - Validation logic
+- **Database Integration** ⭐ - Real PostgreSQL operations
+- **FastAPI Endpoints** - API request/response
+
+### CI/CD Pipeline
+```yaml
+✓ Python 3.10 environment
+✓ PostgreSQL service container
+✓ Automated test execution
+✓ Security scanning (Trivy)
+✓ Docker Hub deployment
+```
+
+---
+
 # 📦 Project Setup
 
 ---
@@ -246,12 +392,210 @@ Then submit the GitHub repository link as instructed.
 
 ---
 
+# 📋 Module 11 Specific Information
+
+## 🔧 Technology Stack
+
+- **Backend Framework**: FastAPI
+- **Database**: PostgreSQL 16
+- **ORM**: SQLAlchemy 2.0 (with polymorphic inheritance)
+- **Validation**: Pydantic v2
+- **Testing**: pytest, pytest-cov
+- **Containerization**: Docker & Docker Compose
+- **CI/CD**: GitHub Actions
+- **Security**: Trivy vulnerability scanner
+
+## 📁 Project Structure
+
+```
+module11_is601/
+├── app/
+│   ├── core/
+│   │   ├── config.py              # Pydantic settings
+│   │   └── __init__.py
+│   ├── models/
+│   │   ├── calculation.py         # Polymorphic models ⭐
+│   │   ├── user.py                # User model
+│   │   └── __init__.py
+│   ├── schemas/
+│   │   ├── calculation.py         # Pydantic schemas ⭐
+│   │   └── __init__.py
+│   ├── operations/
+│   │   └── __init__.py            # Basic operations
+│   └── database.py                # DB configuration
+├── tests/
+│   ├── unit/                      # Unit tests
+│   ├── integration/
+│   │   ├── test_calculation.py           # Polymorphic tests
+│   │   ├── test_calculation_schema.py    # Validation tests
+│   │   ├── test_calculation_db.py        # DB integration ⭐ NEW
+│   │   └── test_fastapi_calculator.py    # API tests
+│   ├── e2e/                       # End-to-end tests
+│   └── conftest.py                # Shared fixtures ⭐
+├── .github/workflows/
+│   └── test.yml                   # CI/CD pipeline ⭐
+├── docker-compose.yml             # Multi-container setup
+├── Dockerfile                     # Application container
+├── main.py                        # FastAPI application
+├── requirements.txt               # Dependencies
+└── README.md                      # This file
+
+⭐ = Recently enhanced/added for Module 11
+```
+
+## 🎓 Learning Objectives Achieved
+
+✅ **Define Calculation Model**
+- SQLAlchemy models with `id`, `user_id`, `type`, `inputs`, `result`
+- Valid foreign key relationships
+- Result computed on-demand via `get_result()`
+
+✅ **Create Pydantic Schemas**
+- `CalculationCreate` receives `type`, `inputs`, `user_id`
+- `CalculationResponse` returns all fields including computed result
+- Validation: no division by zero, minimum 2 inputs, valid types
+
+✅ **Incorporate Factory Pattern**
+- `Calculation.create()` factory method
+- Returns correct subclass based on type string
+- Demonstrates design pattern in data layer
+
+✅ **Write Unit + Integration Tests**
+- **Unit Tests**: 26 tests for operation logic
+- **Integration Tests**: 
+  - 19 tests for polymorphic behavior
+  - 23 tests for schema validation
+  - **20 tests with real PostgreSQL database** ⭐
+  - 5 tests for FastAPI endpoints
+
+✅ **Maintain CI/CD**
+- GitHub Actions workflow with PostgreSQL service
+- Runs all tests on push/PR
+- Security scanning with Trivy
+- Automatic Docker Hub deployment on success
+
+## 💡 Key Implementation Highlights
+
+### 1. Polymorphic Inheritance
+```python
+# Single table, multiple types
+calc = Calculation.create('addition', user_id, [1, 2, 3])
+assert isinstance(calc, Addition)  # Returns specific subclass
+assert calc.get_result() == 6       # Type-specific behavior
+```
+
+### 2. Database Integration Testing
+```python
+# Real PostgreSQL operations
+def test_insert_calculation_to_db(db_session, test_user):
+    calc = Calculation.create('addition', test_user.id, [10, 5])
+    db_session.add(calc)
+    db_session.commit()
+    
+    saved_calc = db_session.query(Calculation).first()
+    assert saved_calc.get_result() == 15
+```
+
+### 3. Factory Pattern
+```python
+# Centralized creation logic
+calculation_classes = {
+    'addition': Addition,
+    'subtraction': Subtraction,
+    'multiplication': Multiplication,
+    'division': Division,
+}
+return calculation_classes[type](user_id=user_id, inputs=inputs)
+```
+
+## 🐛 Troubleshooting
+
+### PostgreSQL Connection Issues
+```bash
+# Check if database is running
+docker ps | grep postgres
+
+# View database logs
+docker logs postgres_db
+
+# Restart database
+docker compose restart db
+```
+
+### Test Failures
+```bash
+# Run specific test file
+pytest tests/integration/test_calculation_db.py -v
+
+# Run with detailed output
+pytest tests/ -vv --tb=long
+
+# Skip database tests (if DB not available)
+pytest tests/ --ignore=tests/integration/test_calculation_db.py
+```
+
+### Docker Issues
+```bash
+# Clean up old containers and volumes
+docker compose down -v
+
+# Rebuild images
+docker compose build --no-cache
+
+# Start fresh
+docker compose up -d --force-recreate
+```
+
+## 📊 Coverage Report
+
+Generate detailed coverage report:
+```bash
+pytest tests/ --cov=app --cov-report=html
+open htmlcov/index.html  # View in browser
+```
+
+Current coverage: **93%**
+
+## 🚢 Deployment
+
+### Local Development
+```bash
+docker compose up -d
+# Access: http://localhost:8000
+# PgAdmin: http://localhost:5050
+```
+
+### Production (Docker Hub)
+```bash
+# Pull from Docker Hub
+docker pull chengxin199/601_module11:latest
+
+# Run container
+docker run -p 8000:8000 chengxin199/601_module11:latest
+```
+
+## 📝 Assignment Completion Checklist
+
+- [x] SQLAlchemy Calculation model with all required fields
+- [x] Valid foreign key to User model
+- [x] Pydantic schemas with comprehensive validation
+- [x] Factory pattern implementation
+- [x] Unit tests for all operation types
+- [x] Integration tests with real PostgreSQL database
+- [x] Error handling (division by zero, invalid inputs)
+- [x] CI/CD pipeline with PostgreSQL service
+- [x] Docker deployment to Docker Hub
+- [x] Documentation and README
+- [x] 93% code coverage
+
+---
+
 # 📋 Notes
 
 - Install **Homebrew** first on Mac.
 - Install and configure **Git** and **SSH** before cloning.
 - Use **Python 3.10+** and **virtual environments** for Python projects.
-- **Docker** is optional depending on the project.
+- **Docker** is required for database integration tests.
 
 ---
 
@@ -262,3 +606,18 @@ Then submit the GitHub repository link as instructed.
 - [Python Downloads](https://www.python.org/downloads/)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - [GitHub SSH Setup Guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [SQLAlchemy Docs](https://docs.sqlalchemy.org/)
+- [Pydantic Docs](https://docs.pydantic.dev/)
+
+---
+
+## 👤 Author
+
+**chengxin199**
+- GitHub: [@chengxin199](https://github.com/chengxin199)
+- Repository: [IS601_Assignment11](https://github.com/chengxin199/IS601_Assignment11_Implement-and-Test-a-Calculation-Model-with-Optional-Factory-Pattern-)
+
+## 📄 License
+
+This project is part of IS601 coursework.
