@@ -1,8 +1,11 @@
 # Module 11: Calculation Model with Factory Pattern & Database Integration
 
+ **Docker Hub**: [`chengxin199/is601_module11`](https://hub.docker.com/r/chengxin199/is601_module11)
+
 [![CI/CD](https://github.com/chengxin199/IS601_Assignment11_Implement-and-Test-a-Calculation-Model-with-Optional-Factory-Pattern-/actions/workflows/test.yml/badge.svg)](https://github.com/chengxin199/IS601_Assignment11_Implement-and-Test-a-Calculation-Model-with-Optional-Factory-Pattern-/actions)
 [![Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen)]()
 [![Tests](https://img.shields.io/badge/tests-91%20passed-success)]()
+[![Docker](https://img.shields.io/badge/docker-chengxin199%2Fis601__module11-blue?logo=docker)](https://hub.docker.com/r/chengxin199/is601_module11)
 
 ## 🎯 Project Overview
 
@@ -67,9 +70,14 @@ A FastAPI-based calculator application demonstrating:
 
 ```bash
 # Clone repository
-git clone <your-repo-url>
+git clone https://github.com/chengxin199/IS601_Assignment11_Implement-and-Test-a-Calculation-Model-with-Optional-Factory-Pattern-.git
 cd module11_is601
 
+# Option 1: Run with Docker (Recommended)
+docker pull chengxin199/is601_module11:latest
+docker run -p 8000:8000 chengxin199/is601_module11:latest
+
+# Option 2: Run locally
 # Create virtual environment
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
@@ -558,20 +566,52 @@ Current coverage: **93%**
 
 ## 🚢 Deployment
 
-### Local Development
+### Quick Start with Docker Hub
+
 ```bash
-docker compose up -d
-# Access: http://localhost:8000
-# PgAdmin: http://localhost:5050
+# Pull and run the latest image
+docker pull chengxin199/is601_module11:latest
+docker run -p 8000:8000 chengxin199/is601_module11:latest
+
+# Or run a specific version
+docker pull chengxin199/is601_module11:v1.0
+docker run -p 8000:8000 chengxin199/is601_module11:v1.0
+
+# Access the application
+# API: http://localhost:8000
+# Docs: http://localhost:8000/docs
 ```
 
-### Production (Docker Hub)
-```bash
-# Pull from Docker Hub
-docker pull chengxin199/601_module11:latest
+### Local Development with Docker Compose
 
-# Run container
-docker run -p 8000:8000 chengxin199/601_module11:latest
+```bash
+# Start all services
+docker compose up -d
+
+# Services:
+# - web: FastAPI application (port 8000)
+# - db: PostgreSQL database (port 5432)
+# - pgadmin: Database admin (port 5050)
+
+# View logs
+docker compose logs -f web
+
+# Stop all services
+docker compose down
+```
+
+### Build and Push Your Own Image
+
+```bash
+# Build image
+docker build -t chengxin199/is601_module11:latest .
+
+# Tag with version
+docker tag chengxin199/is601_module11:latest chengxin199/is601_module11:v1.0
+
+# Push to Docker Hub
+docker push chengxin199/is601_module11:latest
+docker push chengxin199/is601_module11:v1.0
 ```
 
 ## 📝 Assignment Completion Checklist
